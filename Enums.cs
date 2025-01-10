@@ -1,6 +1,6 @@
 ﻿namespace DeliveryConsoleApp;
 
-internal class Enums
+internal static class Enums
 {
     internal enum MenuAction
     {

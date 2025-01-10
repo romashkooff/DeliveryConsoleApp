@@ -1,6 +1,4 @@
 ﻿using Spectre.Console;
-using System.Linq;
-using TestApp;
 
 namespace DeliveryConsoleApp;
 
@@ -9,6 +7,7 @@ internal class Calculations
     private List<(int orderNum, decimal deliveryPrice)> StopPrice(Transportation shp)
     {
         var stopPrice = shp.Stops
+            .Where(stop => stop.Deliveries != null)
             .Select(stop =>
             (
                 stop.StopOrder,
@@ -29,7 +28,7 @@ internal class Calculations
 
         foreach (var stop in stopPrice)
         {
-            Console.WriteLine($"Stop #{stop.orderNum}. Delivery price is: {stop.deliveryPrice} krons.");
+            Console.WriteLine($"Stop #{stop.orderNum}. Delivery price is: {stop.deliveryPrice} koruns.");
         }
         Console.WriteLine($"\nTotal delivery price is: {totalDeliveryPrice}.\n");
 
@@ -40,6 +39,7 @@ internal class Calculations
     public void GoodsStatistics(Transportation shp)
     {
         var stopItemStatistics = shp.Stops
+            .Where (stop => stop.Deliveries != null)
             .Select(stop => new
             {
                 stopNum = stop.StopOrder,
@@ -82,7 +82,8 @@ internal class Calculations
 
     public void MostGoodsCustomer(Transportation shp)
     {
-        var mostFrequentCustomer = shp.Stops
+        var mostGoodsCustomer = shp.Stops
+            .Where(stop => stop.Deliveries != null)
             .Select(stop => new
             {
                 CustomerName = stop.Customer.Name,
@@ -91,10 +92,10 @@ internal class Calculations
                     .Select(item => item.DeliveredCount)
                     .Sum()
             })
-            .ToList()
+            .OrderByDescending(result => result.itemsCount)
             .First();
 
-        Console.WriteLine($"Most frequent customer is: {mostFrequentCustomer.CustomerName}\n");
+        Console.WriteLine($"Most frequent customer is: {mostGoodsCustomer.CustomerName}\n");
 
         AnsiConsole.MarkupLine("Press Any Key to Continue.");
         Console.ReadKey();
@@ -128,7 +129,7 @@ internal class Calculations
 
         foreach (var stop in deliveriesByTotalPrice)
         {
-            Console.WriteLine($"Stop #{stop.orderNum} with the distance of {stop.deliveryPrice} krons.");
+            Console.WriteLine($"Stop #{stop.orderNum} with the distance of {stop.deliveryPrice} koruns.");
         }
 
         AnsiConsole.MarkupLine("Press Any Key to Continue.");

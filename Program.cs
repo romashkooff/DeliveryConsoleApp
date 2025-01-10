@@ -1,9 +1,8 @@
-﻿using DeliveryConsoleApp;
-using TestApp;
+﻿namespace DeliveryConsoleApp;
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
         DataSample dataSample = new DataSample();
         UserInterface userInterface = new UserInterface();

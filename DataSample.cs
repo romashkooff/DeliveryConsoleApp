@@ -1,4 +1,4 @@
-﻿namespace TestApp
+﻿namespace DeliveryConsoleApp
 {
     public class DataSample
     {
@@ -140,7 +140,7 @@
 
         public Customer Customer { get; set; }
 
-        public List<Delivery> Deliveries { get; set; } = new();
+        public List<Delivery> Deliveries { get; set; }
     }
 
     public class Customer
