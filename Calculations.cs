@@ -1,38 +1,21 @@
-﻿using Spectre.Console;
-
-namespace DeliveryConsoleApp;
+﻿namespace DeliveryConsoleApp;
 
 internal class Calculations
 {
-    private List<(int orderNum, decimal deliveryPrice)> StopPrice(Transportation shp)
-    {
-        var stopPrice = shp.Stops
-            .Where(stop => stop.Deliveries != null)
-            .Select(stop =>
-            (
-                stop.StopOrder,
-                stop.Deliveries
-                    .SelectMany(delivery => delivery.Items)
-                    .Sum(item => item.SalesUnitPrice * item.DeliveredCount)
-            ))
-            .ToList();
-        return stopPrice;
-    }
-
     public List<(int orderNum, decimal deliveryPrice)> PriceCalculation(Transportation shp)
     {
-        return StopPrice(shp);
+        return shp.StopPrice();
     }
 
     public decimal TotalPriceCalculation (Transportation shp)
     {
-        var stopPrice = StopPrice(shp);
+        var stopPrice = shp.StopPrice();
         
         return stopPrice
             .Sum(stop => stop.deliveryPrice);
     }
 
-    public IEnumerable<(int orderNum, IEnumerable<(string Key, int DeliveredCount)>)> GoodsStatistics(Transportation shp)
+    public IEnumerable<(int orderNum, IEnumerable<(string Name, int DeliveredCount)>)> GoodsStatistics(Transportation shp)
     {
         return shp.Stops
             .Where(stop => stop.Deliveries != null)
@@ -84,9 +67,9 @@ internal class Calculations
             ));
     }
 
-    public IEnumerable<(int orderNum, decimal deliveryPrice)> deliveriesByPrice(Transportation shp)
+    public IEnumerable<(int orderNum, decimal deliveryPrice)> DeliveriesByPrice(Transportation shp)
     {
-        return StopPrice(shp)
+        return shp.StopPrice()
             .OrderByDescending(stop => stop.deliveryPrice);
     }
 }

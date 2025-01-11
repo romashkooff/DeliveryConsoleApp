@@ -6,7 +6,7 @@ namespace DeliveryConsoleApp;
 
 public class UserInterface
 {
-    private readonly Calculations _shpCalc = new Calculations();
+    private readonly Calculations _shpCalc = new();
 
     public void MainMenu(Transportation shp)
     {
@@ -89,8 +89,8 @@ public class UserInterface
             Console.WriteLine($"\nStop #{stop.orderNum}:\n");
             foreach (var item in stop.Item2)
             {
-                Console.WriteLine($"Item name: {item.Key}");
-                Console.WriteLine($"Item count: {item.Item2}");
+                Console.WriteLine($"Item name: {item.Name}");
+                Console.WriteLine($"Item count: {item.DeliveredCount}");
             }
         }
     }
@@ -121,7 +121,7 @@ public class UserInterface
 
     private void ShipmentByPriceInterpreted(Transportation shp)
     {
-        var deliveriesByPrice = _shpCalc.deliveriesByPrice(shp);
+        var deliveriesByPrice = _shpCalc.DeliveriesByPrice(shp);
         
         foreach (var stop in deliveriesByPrice)
         {
