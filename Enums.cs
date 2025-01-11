@@ -6,6 +6,8 @@ public static class Enums
     {
         PriceCalculation,
         GoodsStatistics,
+        GoodsStatisticsSerialized,
+        GoodsStatisticsDeserialized,
         CarStatistics,
         MostGoodsCustomer,
         StopsByDistance,

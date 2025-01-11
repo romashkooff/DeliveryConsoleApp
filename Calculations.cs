@@ -55,7 +55,7 @@ internal class Calculations
             .FirstOrDefault();
     }
 
-    public IEnumerable<(int orderNum, double distanceFromPreviousStop)> StopsByDistance(Transportation shp)
+    public IEnumerable<(int orderNum, double distance)> StopsByDistance(Transportation shp)
     {
         return shp.Stops
             .Where(stop => stop.Deliveries != null)

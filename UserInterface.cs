@@ -7,6 +7,7 @@ namespace DeliveryConsoleApp;
 public class UserInterface
 {
     private readonly Calculations _shpCalc = new();
+    private readonly Convertor _textConv = new();
 
     public void MainMenu(Transportation shp)
     {
@@ -35,6 +36,14 @@ public class UserInterface
                     GoodsStatisticsInterpreted(shp);
                     PressAnyKeyToContinue();
                     break;
+                case GoodsStatisticsSerialized:
+                    GoodsStatisticsSerializedInterpreted(shp);
+                    PressAnyKeyToContinue();
+                    break;
+                case GoodsStatisticsDeserialized:
+                    GoodsStatisticsDeserializedInterpreted(shp);
+                    PressAnyKeyToContinue();
+                    break;
                 case CarStatistics:
                     CarStatisticsInterpreted(shp);
                     PressAnyKeyToContinue();
@@ -51,6 +60,7 @@ public class UserInterface
                     ShipmentByPriceInterpreted(shp);
                     PressAnyKeyToContinue();
                     break;
+                
                 case Exit:
                     break;
             }
@@ -115,7 +125,7 @@ public class UserInterface
         
         foreach (var stop in stopsByDistance)
         {
-            Console.WriteLine($"Stop #{stop.orderNum} with the distance of {stop.Item2} km.");
+            Console.WriteLine($"Stop #{stop.orderNum} with the distance of {stop.distance} km.");
         }
     }
 
@@ -126,6 +136,32 @@ public class UserInterface
         foreach (var stop in deliveriesByPrice)
         {
             Console.WriteLine($"Stop #{stop.orderNum} with the distance of {stop.deliveryPrice} koruns.");
+        }
+    }
+
+    private void GoodsStatisticsSerializedInterpreted(Transportation shp)
+    {
+        var goodsStatistics = _shpCalc.GoodsStatistics(shp);
+        
+        var serialized = _textConv.GoodsStatisticsSerialized(goodsStatistics);
+        
+        Console.WriteLine(serialized);
+    }
+
+    private void GoodsStatisticsDeserializedInterpreted(Transportation shp)
+    {
+        var goodsStatistics = _shpCalc.GoodsStatistics(shp);
+        var serialized = _textConv.GoodsStatisticsSerialized(goodsStatistics);
+        var deserealized = _textConv.GoodsStatisticsDeserialized(serialized);
+        
+        foreach (var stop in deserealized)
+        {
+            Console.WriteLine($"\nStop #{stop.orderNum}:\n");
+            foreach (var item in stop.Item2)
+            {
+                Console.WriteLine($"Item name: {item.Name}");
+                Console.WriteLine($"Item count: {item.DeliveredCount}");
+            }
         }
     }
 }
