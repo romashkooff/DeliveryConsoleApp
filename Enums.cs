@@ -1,8 +1,8 @@
 ﻿namespace DeliveryConsoleApp;
 
-internal static class Enums
+public static class Enums
 {
-    internal enum MenuAction
+    public enum MenuAction
     {
         PriceCalculation,
         GoodsStatistics,

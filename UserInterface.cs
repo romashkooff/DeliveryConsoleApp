@@ -1,13 +1,14 @@
 ﻿using Spectre.Console;
 using static DeliveryConsoleApp.Enums;
+using static DeliveryConsoleApp.Enums.MenuAction;
 
 namespace DeliveryConsoleApp;
 
-internal class UserInterface
+public class UserInterface
 {
     private readonly Calculations _shpCalc = new Calculations();
-    
-    internal void MainMenu(Transportation shp)
+
+    public void MainMenu(Transportation shp)
     {
         while (true)
         {
@@ -15,37 +16,116 @@ internal class UserInterface
 
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<MenuAction>()
-                .Title("Choose the option:")
-                .AddChoices(Enum.GetValues<MenuAction>()));
+                    .Title("Choose the option:")
+                    .AddChoices(Enum.GetValues<MenuAction>()));
 
-            if (choice == MenuAction.Exit)
+            if (choice == Exit)
             {
                 return;
             }
 
             switch (choice)
             {
-                case MenuAction.PriceCalculation:
-                    _shpCalc.PriceCalculation(shp);
+                case PriceCalculation:
+                    PriceCalculationInterpreted(shp);
+                    TotalPriceCalculationInterpreted(shp);
+                    PressAnyKeyToContinue();
                     break;
-                case MenuAction.GoodsStatistics:
-                    _shpCalc.GoodsStatistics(shp);
+                case GoodsStatistics:
+                    GoodsStatisticsInterpreted(shp);
+                    PressAnyKeyToContinue();
                     break;
-                case MenuAction.CarStatistics:
-                    _shpCalc.CarStatistics(shp);
+                case CarStatistics:
+                    CarStatisticsInterpreted(shp);
+                    PressAnyKeyToContinue();
                     break;
-                case MenuAction.MostGoodsCustomer:
-                    _shpCalc.MostGoodsCustomer(shp);
+                case MostGoodsCustomer:
+                    MostGoodsCustomerInterpreted(shp);
+                    PressAnyKeyToContinue();
                     break;
-                case MenuAction.StopsByDistance:
-                    _shpCalc.StopsByDistance(shp);
+                case StopsByDistance:
+                    StopsByDistanceInterpreted(shp);
+                    PressAnyKeyToContinue();
                     break;
-                case MenuAction.ShipmentByPrice:
-                    _shpCalc.ShipmentByPrice(shp);
+                case ShipmentByPrice:
+                    ShipmentByPriceInterpreted(shp);
+                    PressAnyKeyToContinue();
                     break;
-                case MenuAction.Exit:
+                case Exit:
                     break;
             }
+        }
+    }
+
+    private void PressAnyKeyToContinue()
+    {
+        AnsiConsole.MarkupLine("Press Any Key to Continue.");
+        Console.ReadKey();
+    }
+    
+    private void PriceCalculationInterpreted(Transportation shp)
+    {
+        var priceCalculation = _shpCalc.PriceCalculation(shp);
+
+        foreach (var stop in priceCalculation)
+        {
+            Console.WriteLine($"Stop #{stop.orderNum}. Delivery price is: {stop.deliveryPrice} koruns.");
+        }
+    }
+
+    private void TotalPriceCalculationInterpreted(Transportation shp)
+    {
+        var totalPriceCalculation = _shpCalc.TotalPriceCalculation(shp);
+
+        Console.WriteLine($"\nTotal delivery price is: {totalPriceCalculation}.\n");
+    }
+
+    private void GoodsStatisticsInterpreted(Transportation shp)
+    {
+        var stopItemStatistics = _shpCalc.GoodsStatistics(shp);
+
+        foreach (var stop in stopItemStatistics)
+        {
+            Console.WriteLine($"\nStop #{stop.orderNum}:\n");
+            foreach (var item in stop.Item2)
+            {
+                Console.WriteLine($"Item name: {item.Key}");
+                Console.WriteLine($"Item count: {item.Item2}");
+            }
+        }
+    }
+
+    private void CarStatisticsInterpreted(Transportation shp)
+    {
+        var totalCarDistance = _shpCalc.TotalCarDistance(shp);
+
+        Console.WriteLine($"Total car distance is: {totalCarDistance} km.\n");
+    }
+
+    private void MostGoodsCustomerInterpreted(Transportation shp)
+    {
+        var mostGoodsCustomer = _shpCalc.MostGoodsCustomer(shp);
+
+        Console.WriteLine($"Most frequent customer is: {mostGoodsCustomer.Name}\n");
+    }
+
+    private void StopsByDistanceInterpreted(Transportation shp)
+    {
+        var stopsByDistance = _shpCalc.StopsByDistance(shp);
+        
+        foreach (var stop in stopsByDistance)
+        {
+            Console.WriteLine($"Stop #{stop.orderNum} with the distance of {stop.Item2} km.");
+        }
+    }
+
+    private void ShipmentByPriceInterpreted(Transportation shp)
+    {
+        var deliveriesByPrice = _shpCalc.deliveriesByPrice(shp);
+        
+        foreach (var stop in deliveriesByPrice)
+        {
+            Console.WriteLine($"Stop #{stop.orderNum} with the distance of {stop.deliveryPrice} koruns.");
         }
     }
 }
