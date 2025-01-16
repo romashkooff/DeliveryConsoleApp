@@ -8,6 +8,8 @@ public static class Enums
         GoodsStatistics,
         GoodsStatisticsSerialized,
         GoodsStatisticsDeserialized,
+        GoodsStatisticsSaveToFile,
+        GoodsStatisticsLoadFromFile,
         CarStatistics,
         MostGoodsCustomer,
         StopsByDistance,

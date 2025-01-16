@@ -44,6 +44,14 @@ public class UserInterface
                     GoodsStatisticsDeserializedInterpreted(shp);
                     PressAnyKeyToContinue();
                     break;
+                case GoodsStatisticsSaveToFile:
+                    _ = GoodsStatisticsSaveToFileInterpreted(shp);
+                    PressAnyKeyToContinue();
+                    break;
+                case GoodsStatisticsLoadFromFile:
+                    GoodsStatisticsLoadFromFileInterpreted(shp);
+                    PressAnyKeyToContinue();
+                    break;
                 case CarStatistics:
                     CarStatisticsInterpreted(shp);
                     PressAnyKeyToContinue();
@@ -60,7 +68,6 @@ public class UserInterface
                     ShipmentByPriceInterpreted(shp);
                     PressAnyKeyToContinue();
                     break;
-                
                 case Exit:
                     break;
             }
@@ -104,6 +111,53 @@ public class UserInterface
             }
         }
     }
+    
+    private void GoodsStatisticsSerializedInterpreted(Transportation shp)
+    {
+        var goodsStatistics = _shpCalc.GoodsStatistics(shp);
+        
+        var serialized = _textConv.GoodsStatisticsSerialized(goodsStatistics);
+        
+        Console.WriteLine(serialized);
+    }
+
+    private void GoodsStatisticsDeserializedInterpreted(Transportation shp)
+    {
+        var goodsStatistics = _shpCalc.GoodsStatistics(shp);
+        var serialized = _textConv.GoodsStatisticsSerialized(goodsStatistics);
+        var deserialized = _textConv.GoodsStatisticsDeserialized(serialized);
+        
+        foreach (var stop in deserialized)
+        {
+            Console.WriteLine($"\nStop #{stop.orderNum}:\n");
+            foreach (var item in stop.Item2)
+            {
+                Console.WriteLine($"Item name: {item.Name}");
+                Console.WriteLine($"Item count: {item.DeliveredCount}");
+            }
+        }
+    }
+
+    private async Task GoodsStatisticsSaveToFileInterpreted(Transportation shp)
+    {
+        var goodsStatistics = _shpCalc.GoodsStatistics(shp);
+        var serialized = _textConv.GoodsStatisticsSerialized(goodsStatistics);
+        var fileName = "GoodsStatisticsSerialized.json";
+        
+        var saveTask = _textConv.SaveToFile(fileName, serialized);
+        await saveTask;
+        
+        // Using async / await:
+        // await _textConv.SaveToFile(fileName, serialized);
+    }
+    
+    private async Task GoodsStatisticsLoadFromFileInterpreted(Transportation shp)
+    {
+        var fileName = "GoodsStatisticsSerialized.json";
+        
+        var data = _textConv.LoadFromFile(fileName);
+        Console.WriteLine(await data);
+    }
 
     private void CarStatisticsInterpreted(Transportation shp)
     {
@@ -136,32 +190,6 @@ public class UserInterface
         foreach (var stop in deliveriesByPrice)
         {
             Console.WriteLine($"Stop #{stop.orderNum} with the distance of {stop.deliveryPrice} koruns.");
-        }
-    }
-
-    private void GoodsStatisticsSerializedInterpreted(Transportation shp)
-    {
-        var goodsStatistics = _shpCalc.GoodsStatistics(shp);
-        
-        var serialized = _textConv.GoodsStatisticsSerialized(goodsStatistics);
-        
-        Console.WriteLine(serialized);
-    }
-
-    private void GoodsStatisticsDeserializedInterpreted(Transportation shp)
-    {
-        var goodsStatistics = _shpCalc.GoodsStatistics(shp);
-        var serialized = _textConv.GoodsStatisticsSerialized(goodsStatistics);
-        var deserealized = _textConv.GoodsStatisticsDeserialized(serialized);
-        
-        foreach (var stop in deserealized)
-        {
-            Console.WriteLine($"\nStop #{stop.orderNum}:\n");
-            foreach (var item in stop.Item2)
-            {
-                Console.WriteLine($"Item name: {item.Name}");
-                Console.WriteLine($"Item count: {item.DeliveredCount}");
-            }
         }
     }
 }
