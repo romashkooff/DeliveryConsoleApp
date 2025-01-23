@@ -21,8 +21,8 @@ internal class Calculations
             .Where(stop => stop.Deliveries != null)
             .Select(stop => new ItemsGrouped
             {
-                orderNum = stop.StopOrder,
-                deliveryItems = stop.Deliveries
+                OrderNum = stop.StopOrder,
+                DeliveryItems = stop.Deliveries
                     .SelectMany(delivery => delivery.Items)
                     .GroupBy(item => item.Name)
                     .Select(itemsGrouped => new ItemCounted
@@ -79,8 +79,8 @@ internal class Calculations
 
 public class ItemsGrouped
 {
-    public int orderNum { get; set; }
-    public List<ItemCounted> deliveryItems { get; set; }
+    public int OrderNum { get; set; }
+    public List<ItemCounted> DeliveryItems { get; set; }
 }
 
 public class ItemCounted

@@ -103,8 +103,8 @@ public class UserInterface
 
         foreach (var stop in stopItemStatistics)
         {
-            Console.WriteLine($"\nStop #{stop.orderNum}:\n");
-            foreach (var item in stop.deliveryItems)
+            Console.WriteLine($"\nStop #{stop.OrderNum}:\n");
+            foreach (var item in stop.DeliveryItems)
             {
                 Console.WriteLine($"Item name: {item.Name}");
                 Console.WriteLine($"Item count: {item.DeliveredCount}");
@@ -129,8 +129,8 @@ public class UserInterface
         
         foreach (var stop in deserialized)
         {
-            Console.WriteLine($"\nStop #{stop.orderNum}:\n");
-            foreach (var item in stop.deliveryItems)
+            Console.WriteLine($"\nStop #{stop.OrderNum}:\n");
+            foreach (var item in stop.DeliveryItems)
             {
                 Console.WriteLine($"Item name: {item.Name}");
                 Console.WriteLine($"Item count: {item.DeliveredCount}");
