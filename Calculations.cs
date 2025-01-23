@@ -15,22 +15,25 @@ internal class Calculations
             .Sum(stop => stop.deliveryPrice);
     }
 
-    public IEnumerable<(int orderNum, IEnumerable<(string Name, int DeliveredCount)>)> GoodsStatistics(Transportation shp)
+    public List<ItemsGrouped> GoodsStatistics(Transportation shp)
     {
-        return shp.Stops
+        var goodsStatistics = shp.Stops
             .Where(stop => stop.Deliveries != null)
-            .Select(stop =>
-            (
-                stop.StopOrder,
-                stop.Deliveries
+            .Select(stop => new ItemsGrouped
+            {
+                orderNum = stop.StopOrder,
+                deliveryItems = stop.Deliveries
                     .SelectMany(delivery => delivery.Items)
                     .GroupBy(item => item.Name)
-                    .Select(itemsGrouped =>
-                    (
-                        itemsGrouped.Key,
-                        itemsGrouped.Sum(item => item.DeliveredCount)
-                    ))
-            ));
+                    .Select(itemsGrouped => new ItemCounted
+                    {
+                        Name = itemsGrouped.Key,
+                        DeliveredCount = itemsGrouped.Sum(item => item.DeliveredCount)
+                    })
+                    .ToList()
+            })
+            .ToList();
+        return goodsStatistics;
     }
 
     public double TotalCarDistance(Transportation shp)
@@ -72,4 +75,16 @@ internal class Calculations
         return shp.StopPrice()
             .OrderByDescending(stop => stop.deliveryPrice);
     }
+}
+
+public class ItemsGrouped
+{
+    public int orderNum { get; set; }
+    public List<ItemCounted> deliveryItems { get; set; }
+}
+
+public class ItemCounted
+{
+    public string Name { get; set; }
+    public int DeliveredCount { get; set; }
 }

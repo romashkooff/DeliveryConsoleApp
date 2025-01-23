@@ -49,7 +49,7 @@ public class UserInterface
                     PressAnyKeyToContinue();
                     break;
                 case GoodsStatisticsLoadFromFile:
-                    GoodsStatisticsLoadFromFileInterpreted(shp);
+                    _ = GoodsStatisticsLoadFromFileInterpreted();
                     PressAnyKeyToContinue();
                     break;
                 case CarStatistics:
@@ -104,7 +104,7 @@ public class UserInterface
         foreach (var stop in stopItemStatistics)
         {
             Console.WriteLine($"\nStop #{stop.orderNum}:\n");
-            foreach (var item in stop.Item2)
+            foreach (var item in stop.deliveryItems)
             {
                 Console.WriteLine($"Item name: {item.Name}");
                 Console.WriteLine($"Item count: {item.DeliveredCount}");
@@ -130,7 +130,7 @@ public class UserInterface
         foreach (var stop in deserialized)
         {
             Console.WriteLine($"\nStop #{stop.orderNum}:\n");
-            foreach (var item in stop.Item2)
+            foreach (var item in stop.deliveryItems)
             {
                 Console.WriteLine($"Item name: {item.Name}");
                 Console.WriteLine($"Item count: {item.DeliveredCount}");
@@ -151,12 +151,12 @@ public class UserInterface
         // await _textConv.SaveToFile(fileName, serialized);
     }
     
-    private async Task GoodsStatisticsLoadFromFileInterpreted(Transportation shp)
+    private async Task GoodsStatisticsLoadFromFileInterpreted()
     {
         var fileName = "GoodsStatisticsSerialized.json";
         
-        var data = _textConv.LoadFromFile(fileName);
-        Console.WriteLine(await data);
+        var data = await _textConv.LoadFromFile(fileName);
+        Console.WriteLine(data);
     }
 
     private void CarStatisticsInterpreted(Transportation shp)
